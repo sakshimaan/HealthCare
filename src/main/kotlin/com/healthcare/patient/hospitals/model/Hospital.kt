@@ -27,6 +27,4 @@ data class Hospital(
     @JsonIgnore
     var createdAt: LocalDateTime = LocalDateTime.now(),
 
-    @Transient
-    var practitioner: Person?
 )
