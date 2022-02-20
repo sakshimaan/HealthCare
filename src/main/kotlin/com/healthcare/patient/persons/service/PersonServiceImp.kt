@@ -5,10 +5,12 @@ import com.healthcare.patient.persons.model.Person
 import com.healthcare.patient.persons.model.Role
 import com.healthcare.patient.persons.repository.PersonRepository
 import com.healthcare.patient.validator.Validate
+import org.apache.commons.lang3.RandomStringUtils
 import org.springframework.stereotype.Service
 
 @Service
 class PersonServiceImp(private val repository: PersonRepository):PersonService{
+
     override fun createPerson(person:Person):Person {
         person.id = generateUniqueId()
         try {
@@ -47,23 +49,35 @@ class PersonServiceImp(private val repository: PersonRepository):PersonService{
         return repository.findById(id).orElseThrow { Exception("Person with id:$id not found") }
     }
 
-    override fun getByRole(role: String): List<Person>? {
+    override fun getByFirstName(firstName: String): List<Person> {
         try{
-            return  repository.findByRole(role)
-        }catch (e:IllegalArgumentException){
-            throw ServiceException("Please enter valid request for role : $role")
-        }catch (e: NoSuchElementException){
-            throw ServiceException("role : $role does not exist")
+            return  repository.findByFirstName(firstName)
+        }catch (e:Exception){
+            throw ServiceException("Person with name:$firstName not found")
         }
     }
 
-    override fun getByCity(city: String): List<Person>? {
-        try {
-            return repository.findByCity(city)
-        }catch (e:IllegalArgumentException){
-            throw ServiceException("Please enter valid request for city : $city ")
-        }catch (e: NoSuchElementException){
-            throw ServiceException("city : $city does not exist")
+    override fun getByRole(role: String): List<Person> {
+        try{
+            return repository.findByRole(role)!!
+        }catch (e:Exception){
+            throw ServiceException("Person with role:$role not found")
+        }
+    }
+
+    override fun getByCity(city: String): List<Person> {
+        try{
+            return repository.findByCity(city)!!
+        }catch (e:Exception){
+            throw ServiceException("Person with city name :$city not found")
+        }
+    }
+
+    override fun getByHospitalId(hospitalId: String): List<Person> {
+        try{
+            return repository.findByHospitalId(hospitalId)!!
+        }catch (e:Exception){
+            throw ServiceException("No Person Associated with hospital id : $hospitalId")
         }
     }
 
@@ -112,10 +126,11 @@ class PersonServiceImp(private val repository: PersonRepository):PersonService{
 
     fun generateUniqueId(): String {
         var generatedId:String
-        val values = ('A'..'Z') + ('a'..'z') + ('0'..'9')
+        //val values = ('0'..'9')
         var attempt = 1
         do {
-            generatedId = (values).map { it }.shuffled().subList(0, 10).joinToString("")
+            generatedId = RandomStringUtils.randomNumeric(8)
+           // generatedId = (values).map { it }.shuffled().subList(0, 5).joinToString("")
             if(++attempt > 10) {
                 throw ServiceException("Unable to generate Unique Id")
             }

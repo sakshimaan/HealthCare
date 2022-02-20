@@ -7,7 +7,7 @@ import java.time.LocalDateTime
 
 class HospitalRestResponse(
     var message:String,
-    var status: HttpStatus,
+    var status: Int?=null,
     @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
     var time: LocalDateTime,
     var data: Hospital

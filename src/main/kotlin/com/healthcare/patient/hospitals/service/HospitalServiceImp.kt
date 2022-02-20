@@ -4,6 +4,7 @@ import com.healthcare.patient.exceptionHandling.ServiceException
 import com.healthcare.patient.hospitals.model.Hospital
 import com.healthcare.patient.hospitals.repository.HospitalRepository
 import com.healthcare.patient.validator.Validate
+import org.apache.commons.lang3.RandomStringUtils
 import org.springframework.stereotype.Service
 
 @Service
@@ -37,6 +38,30 @@ class HospitalServiceImp(private val repository: HospitalRepository):HospitalSer
        }
     }
 
+    override fun getByName(name: String): List<Hospital> {
+        try {
+            return repository.findByName(name)
+        }catch (e:Exception){
+            throw ServiceException("Hospital with name : $name")
+        }
+    }
+
+    override fun getByCity(city: String): List<Hospital> {
+        try{
+            return repository.findByCity(city)
+        }catch (e:Exception){
+            throw ServiceException("No hospital found in city: $city")
+        }
+    }
+
+    override fun getByRegistrationNo(registrationNo: String): List<Hospital> {
+        try{
+            return  repository.findByRegistrationNo(registrationNo)
+        }catch (e:Exception){
+            throw ServiceException("No hospital found with registration number : $registrationNo")
+        }
+    }
+
     override fun getOne(id: String): Hospital {
 
         return repository.findById(id).orElseThrow { Exception("Hospital with id:$id not found") }
@@ -62,7 +87,7 @@ class HospitalServiceImp(private val repository: HospitalRepository):HospitalSer
     override fun partialUpdateHospital(id: String, hospital: Hospital): Hospital {
         val oldId = repository.findById(id).orElseThrow { Exception("No hospital exist with id : $id") }
         hospital.name.let { oldId.name = it}
-        hospital.telephoneNo.let { oldId.name=it}
+        hospital.telephoneNo.let { oldId.name = it}
         hospital.emergencyContactNo.let { oldId.emergencyContactNo = it }
         hospital.registrationNo.let { oldId.registrationNo = it }
         hospital.email.let { oldId.email = it}
@@ -81,10 +106,11 @@ class HospitalServiceImp(private val repository: HospitalRepository):HospitalSer
 
     fun generateUniqueId(): String {
         var generatedId:String
-        val values = ('A'..'Z') + ('a'..'z') + ('0'..'9')
+       // val values = ('A'..'Z') + ('a'..'z') + ('0'..'9')
         var attempt = 1
         do {
-            generatedId = (values).map { it }.shuffled().subList(0, 10).joinToString("")
+            generatedId = RandomStringUtils.randomNumeric(8)
+            //generatedId = (values).map { it }.shuffled().subList(0, 10).joinToString("")
             if(++attempt > 10) {
                 throw ServiceException("Unable to generate Unique Id")
             }

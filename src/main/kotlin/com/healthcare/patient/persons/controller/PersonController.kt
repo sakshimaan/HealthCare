@@ -13,23 +13,22 @@ import javax.validation.Valid
 class PersonController(private val personService: PersonService) {
 
     @GetMapping
-    fun getAll():ResponseEntity<List<Person>>{
-            return  ResponseEntity.ok(personService.getAll())
+    fun getByName(
+        @RequestParam("firstName") firstName : String?,
+        @RequestParam("role") role:String?,
+        @RequestParam("city") city:String?,
+        @RequestParam("hospitalId") hospitalId:String?
+    ): ResponseEntity<List<Person>>? {
+        firstName?.let { return ResponseEntity.ok(personService.getByFirstName(firstName)) }
+        role?.let { return ResponseEntity.ok(personService.getByRole(role)) }
+        city?.let { return ResponseEntity.ok(personService.getByCity(city)) }
+        hospitalId?.let { return ResponseEntity.ok(personService.getByHospitalId(hospitalId)) }
+        return ResponseEntity.ok(personService.getAll())
     }
 
     @GetMapping("/{id}")
     fun getOne(@PathVariable("id") id:String):ResponseEntity<Person>{
             return ResponseEntity.ok(personService.getOne(id))
-    }
-
-    @GetMapping("/role")
-    fun getByRole(@RequestParam("role") role:String):ResponseEntity<List<Person>>?{
-            return ResponseEntity.ok(personService.getByRole(role))
-    }
-
-    @GetMapping("/city")
-    fun getByCity(@RequestParam("city") city:String):ResponseEntity<List<Person>>?{
-            return ResponseEntity.ok(personService.getByCity(city))
     }
 
     @PostMapping

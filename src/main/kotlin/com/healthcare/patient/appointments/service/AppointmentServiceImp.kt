@@ -6,6 +6,7 @@ import com.healthcare.patient.exceptionHandling.ServiceException
 import com.healthcare.patient.persons.model.Person
 import com.healthcare.patient.persons.model.Role
 import com.healthcare.patient.persons.repository.PersonRepository
+import org.apache.commons.lang3.RandomStringUtils
 import org.springframework.stereotype.Service
 
 @Service
@@ -14,7 +15,9 @@ class AppointmentServiceImp(private val repository:AppointmentRepository,private
     override fun getAll(personId:String): List<Appointment>{
         try {
             val person:Person = personRepository.findById(personId).orElseThrow{ ServiceException("No person exists with id :$personId, Please register yourself")}
-            if(person.role != Role.PATIENT && person.role != Role.PHYSICIAN) throw ServiceException("Only Patient and Physician can see appointment details")
+            if(person.role != Role.PATIENT && person.role != Role.PHYSICIAN) {
+                throw ServiceException("Only Patient and Physician can see appointment details")
+            }
             return repository.findAll()
         }catch (e: Exception) {
             throw ServiceException("Only Patient and Physician can see appointment details")
@@ -59,10 +62,11 @@ class AppointmentServiceImp(private val repository:AppointmentRepository,private
 
     fun generateUniqueId(): String {
         var generatedId:String
-        val values = ('A'..'Z') + ('a'..'z') + ('0'..'9')
+       // val values = ('A'..'Z') + ('a'..'z') + ('0'..'9')
         var attempt = 1
         do {
-            generatedId = (values).map { it }.shuffled().subList(0, 10).joinToString("")
+            generatedId = RandomStringUtils.randomNumeric(8)
+            //generatedId = (values).map { it }.shuffled().subList(0, 10).joinToString("")
             if(++attempt > 10) {
                 throw ServiceException("Unable to generate Unique Id")
             }
