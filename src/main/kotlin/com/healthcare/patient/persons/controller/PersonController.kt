@@ -1,5 +1,7 @@
 package com.healthcare.patient.persons.controller
 
+import com.healthcare.patient.responseMessages.ApiResponseMessages.Companion.PERSON_ADDED
+import com.healthcare.patient.responseMessages.ApiResponseMessages.Companion.PERSON_UPDATED
 import com.healthcare.patient.persons.model.Person
 import com.healthcare.patient.persons.service.PersonService
 import org.springframework.http.HttpStatus
@@ -33,8 +35,7 @@ class PersonController(private val personService: PersonService) {
 
     @PostMapping
     fun createPerson(@Valid @RequestBody person: Person):ResponseEntity<PersonRestResponse>{
-            val message = PersonRestResponse(
-                "Person details added successfully", HttpStatus.CREATED,
+            val message = PersonRestResponse(PERSON_ADDED, HttpStatus.CREATED,
                 ZonedDateTime.now().toLocalDateTime(), personService.createPerson(person)
             )
             return ResponseEntity.ok(message)
@@ -42,8 +43,7 @@ class PersonController(private val personService: PersonService) {
 
     @PutMapping("/{id}")
     fun update(@PathVariable("id") id:String,@Valid @RequestBody person:Person):ResponseEntity<PersonRestResponse>{
-            val message = PersonRestResponse(
-                "Person details updated successfully", HttpStatus.CREATED,
+            val message = PersonRestResponse(PERSON_UPDATED, HttpStatus.CREATED,
                 ZonedDateTime.now().toLocalDateTime(), personService.updatePerson(id, person)
             )
             return ResponseEntity.ok(message)
@@ -52,7 +52,7 @@ class PersonController(private val personService: PersonService) {
 
     @PatchMapping("/{id}")
     fun partialUpdate(@PathVariable("id") id:String,@Valid @RequestBody person:Person):ResponseEntity<PersonRestResponse>{
-        val message = PersonRestResponse("Person details updated successfully", HttpStatus.CREATED,
+        val message = PersonRestResponse(PERSON_UPDATED, HttpStatus.CREATED,
             ZonedDateTime.now().toLocalDateTime(),personService.partialUpdate(id,person))
         return ResponseEntity.ok(message)
     }

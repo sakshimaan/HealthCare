@@ -2,6 +2,8 @@ package com.healthcare.patient.hospitals.controller
 
 import com.healthcare.patient.hospitals.model.Hospital
 import com.healthcare.patient.hospitals.service.HospitalService
+import com.healthcare.patient.responseMessages.ApiResponseMessages.Companion.HOSPITAL_ADDED
+import com.healthcare.patient.responseMessages.ApiResponseMessages.Companion.HOSPITAL_UPDATED
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -17,7 +19,7 @@ class HospitalController(private val hospitalService: HospitalService) {
         @RequestParam("name") name:String?,
         @RequestParam("city") city:String?,
         @RequestParam("registrationNo") registrationNo : String?
-    ):ResponseEntity<List<Hospital>>? {
+    ):ResponseEntity<List<Hospital>> {
         name?.let { return ResponseEntity.ok(hospitalService.getByName(name)) }
         city?.let { return ResponseEntity.ok(hospitalService.getByCity(city)) }
         registrationNo?.let { return ResponseEntity.ok(hospitalService.getByRegistrationNo(registrationNo)) }
@@ -31,8 +33,7 @@ class HospitalController(private val hospitalService: HospitalService) {
 
     @PostMapping
     fun createHospital(@Valid @RequestBody hospital:Hospital):ResponseEntity<HospitalRestResponse>{
-            val message = HospitalRestResponse(
-                "Hospital details added successfully", HttpStatus.CREATED.value(),
+            val message = HospitalRestResponse(HOSPITAL_ADDED, HttpStatus.CREATED.value(),
                 ZonedDateTime.now().toLocalDateTime(), hospitalService.createHospital(hospital)
             )
             return ResponseEntity.ok(message)
@@ -40,8 +41,7 @@ class HospitalController(private val hospitalService: HospitalService) {
 
     @PutMapping("/{id}")
     fun update(@PathVariable("id") id:String,@Valid @RequestBody hospital: Hospital):ResponseEntity<HospitalRestResponse>{
-            val message = HospitalRestResponse(
-                "Hospital details updated successfully",HttpStatus.CREATED.value(),
+            val message = HospitalRestResponse(HOSPITAL_UPDATED,HttpStatus.CREATED.value(),
                 ZonedDateTime.now().toLocalDateTime(), hospitalService.updateHospital(id, hospital)
             )
             return ResponseEntity.ok(message)
@@ -49,8 +49,7 @@ class HospitalController(private val hospitalService: HospitalService) {
 
     @PatchMapping("/{id}")
     fun partialUpdate(@PathVariable("id") id:String,@Valid @RequestBody hospital: Hospital):ResponseEntity<HospitalRestResponse>{
-            val message = HospitalRestResponse(
-                "Hospital details updated successfully",HttpStatus.CREATED.value(),
+            val message = HospitalRestResponse(HOSPITAL_UPDATED,HttpStatus.CREATED.value(),
                 ZonedDateTime.now().toLocalDateTime(), hospitalService.partialUpdateHospital(id, hospital)
             )
             return ResponseEntity.ok(message)

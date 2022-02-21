@@ -2,6 +2,8 @@ package com.healthcare.patient.appointments.controller
 
 import com.healthcare.patient.appointments.model.Appointment
 import com.healthcare.patient.appointments.service.AppointmentService
+import com.healthcare.patient.responseMessages.ApiResponseMessages.Companion.APPOINTMENT_ADDED
+import com.healthcare.patient.responseMessages.ApiResponseMessages.Companion.APPOINTMENT_UPDATED
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -19,8 +21,7 @@ class AppointmentController(private var appointmentService: AppointmentService){
 
     @PostMapping
     fun create(@Valid @RequestBody appointment: Appointment):ResponseEntity<AppointmentRestResponse>{
-            val message = AppointmentRestResponse(
-                "Appointment details added successfully", HttpStatus.CREATED,
+            val message = AppointmentRestResponse(APPOINTMENT_ADDED, HttpStatus.CREATED,
                 ZonedDateTime.now().toLocalDateTime(), appointmentService.create(appointment)
             )
             return ResponseEntity.ok(message)
@@ -28,11 +29,15 @@ class AppointmentController(private var appointmentService: AppointmentService){
 
     @PutMapping("/{id}")
     fun update(@Valid @RequestBody appointment: Appointment, @PathVariable("id") id:String):ResponseEntity<AppointmentRestResponse>{
-            val message = AppointmentRestResponse(
-                "Appointment details updated successfully",HttpStatus.CREATED,
-                ZonedDateTime.now().toLocalDateTime(), appointmentService.update(appointment, id)
-            )
+            val message = AppointmentRestResponse(APPOINTMENT_UPDATED,HttpStatus.CREATED,
+                ZonedDateTime.now().toLocalDateTime(), appointmentService.update(appointment, id))
             return ResponseEntity.ok(message)
+    }
+    @PatchMapping("/{id}")
+    fun partialUpdate(@Valid @RequestBody appointment: Appointment, @PathVariable("id") id:String):ResponseEntity<AppointmentRestResponse>{
+        val message = AppointmentRestResponse(APPOINTMENT_UPDATED,HttpStatus.CREATED,
+            ZonedDateTime.now().toLocalDateTime(),appointmentService.partialUpdate(appointment, id))
+        return  ResponseEntity.ok(message)
     }
 
     @DeleteMapping("/{id}")

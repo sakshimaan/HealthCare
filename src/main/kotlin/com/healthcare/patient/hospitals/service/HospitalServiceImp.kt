@@ -1,8 +1,11 @@
 package com.healthcare.patient.hospitals.service
 
-import com.healthcare.patient.exceptionHandling.ServiceException
+import com.healthcare.patient.exceptionHandling.CustomException
 import com.healthcare.patient.hospitals.model.Hospital
 import com.healthcare.patient.hospitals.repository.HospitalRepository
+import com.healthcare.patient.responseMessages.FailureMessages.Companion.HOSPITAL_ID_ERROR
+import com.healthcare.patient.responseMessages.FailureMessages.Companion.INTERNAL_SERVER_ERROR
+import com.healthcare.patient.responseMessages.FailureMessages.Companion.UNIQUE_ID_ERROR
 import com.healthcare.patient.validator.Validate
 import org.apache.commons.lang3.RandomStringUtils
 import org.springframework.stereotype.Service
@@ -14,14 +17,14 @@ class HospitalServiceImp(private val repository: HospitalRepository):HospitalSer
         hospital.id = generateUniqueId()
         try {
             if(hospital.address.city.isEmpty() || hospital.address.state.isEmpty() || hospital.address.country.isEmpty())
-                throw ServiceException("Improper address details")
-        }catch (e:ServiceException){
-            throw ServiceException("Improper address details")
+                throw CustomException("Improper address details")
+        }catch (e:CustomException){
+            throw CustomException("Improper address details")
         }
         try {
-            if (!Validate.pinCodeValid(hospital.address.pinCode)) throw ServiceException("Incorrect Pin Code")
+            if (!Validate.pinCodeValid(hospital.address.pinCode)) throw CustomException("Incorrect Pin Code")
         }catch (e:Exception){
-            throw ServiceException("Incorrect Pin Code")
+            throw CustomException("Incorrect Pin Code")
         }
           try{
               return repository.save(hospital)
@@ -34,36 +37,17 @@ class HospitalServiceImp(private val repository: HospitalRepository):HospitalSer
        try{
            return repository.findAll()
        }catch (e:Exception){
-           throw ServiceException("Something went wrong")
+           throw CustomException(INTERNAL_SERVER_ERROR)
        }
     }
 
-    override fun getByName(name: String): List<Hospital> {
-        try {
-            return repository.findByName(name)
-        }catch (e:Exception){
-            throw ServiceException("Hospital with name : $name")
-        }
-    }
+    override fun getByName(name: String): List<Hospital>  = repository.findByName(name)
 
-    override fun getByCity(city: String): List<Hospital> {
-        try{
-            return repository.findByCity(city)
-        }catch (e:Exception){
-            throw ServiceException("No hospital found in city: $city")
-        }
-    }
+    override fun getByCity(city: String): List<Hospital> = repository.findByCity(city)
 
-    override fun getByRegistrationNo(registrationNo: String): List<Hospital> {
-        try{
-            return  repository.findByRegistrationNo(registrationNo)
-        }catch (e:Exception){
-            throw ServiceException("No hospital found with registration number : $registrationNo")
-        }
-    }
+    override fun getByRegistrationNo(registrationNo: String): List<Hospital> = repository.findByRegistrationNo(registrationNo)
 
     override fun getOne(id: String): Hospital {
-
         return repository.findById(id).orElseThrow { Exception("Hospital with id:$id not found") }
     }
 
@@ -85,34 +69,30 @@ class HospitalServiceImp(private val repository: HospitalRepository):HospitalSer
     }
 
     override fun partialUpdateHospital(id: String, hospital: Hospital): Hospital {
-        val oldId = repository.findById(id).orElseThrow { Exception("No hospital exist with id : $id") }
-        hospital.name.let { oldId.name = it}
-        hospital.telephoneNo.let { oldId.name = it}
-        hospital.emergencyContactNo.let { oldId.emergencyContactNo = it }
-        hospital.registrationNo.let { oldId.registrationNo = it }
-        hospital.email.let { oldId.email = it}
-        hospital.address.houseNo.let { oldId.address.houseNo = it}
-        hospital.address.block.let { oldId.address.block = it }
-        hospital.address.city.let {oldId.address.city = it }
-        hospital.address.state.let {oldId.address.state = it }
-        hospital.address.country.let { oldId.address.country= it}
-        hospital.address.pinCode.let { oldId.address.pinCode = it }
+        val oldId = repository.findById(id).orElseThrow { Exception(HOSPITAL_ID_ERROR) }
+        hospital.name?.let { oldId.name = it}
+        hospital.telephoneNo?.let { oldId.name = it}
+        hospital.emergencyContactNo?.let { oldId.emergencyContactNo = it }
+        hospital.registrationNo?.let { oldId.registrationNo = it }
+        hospital.email?.let { oldId.email = it}
+        hospital.address.houseNo?.let { oldId.address.houseNo = it}
+        hospital.address.block?.let { oldId.address.block = it }
+        hospital.address.city?.let {oldId.address.city = it }
+        hospital.address.state?.let {oldId.address.state = it }
+        hospital.address.country?.let { oldId.address.country= it}
+        hospital.address.pinCode?.let { oldId.address.pinCode = it }
         return repository.save(hospital)
     }
 
-    override fun deleteOne(id: String) {
-        return repository.deleteById(id)
-    }
+    override fun deleteOne(id: String) = repository.deleteById(id)
 
     fun generateUniqueId(): String {
         var generatedId:String
-       // val values = ('A'..'Z') + ('a'..'z') + ('0'..'9')
         var attempt = 1
         do {
             generatedId = RandomStringUtils.randomNumeric(8)
-            //generatedId = (values).map { it }.shuffled().subList(0, 10).joinToString("")
             if(++attempt > 10) {
-                throw ServiceException("Unable to generate Unique Id")
+                throw CustomException(UNIQUE_ID_ERROR)
             }
         }while(repository.existsById(generatedId))
         return  generatedId

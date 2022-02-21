@@ -2,6 +2,7 @@ package com.healthcare.patient.appointments.model
 
 import com.fasterxml.jackson.annotation.JsonFormat
 import com.fasterxml.jackson.annotation.JsonIgnore
+import com.healthcare.patient.responseMessages.FailureMessages.Companion.APPOINTMENT_DATE
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.mapping.Document
 import java.time.LocalDateTime
@@ -15,11 +16,11 @@ data class Appointment(
     var practitionerId:String,
     var hospitalId:String,
 
-    @field:FutureOrPresent(message = "Appointment date should be present or future date only.")
+    @field:FutureOrPresent(message = APPOINTMENT_DATE)
     @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
     var startDate:LocalDateTime,
 
-    @field:FutureOrPresent(message = "Appointment date should be present or future date only.")
+    @field:FutureOrPresent(message = APPOINTMENT_DATE)
     @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
     var endDate: LocalDateTime,
 

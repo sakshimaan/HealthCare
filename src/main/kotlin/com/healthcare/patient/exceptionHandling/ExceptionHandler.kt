@@ -13,8 +13,8 @@ import java.time.LocalDateTime
 @ControllerAdvice
 class ExceptionHandler{
 
-    @ExceptionHandler(ServiceException::class)
-    fun serviceExe(ex:ServiceException,request: WebRequest):ResponseEntity<ErrorResponse>{
+    @ExceptionHandler(CustomException::class)
+    fun serviceExe(ex:CustomException, request: WebRequest):ResponseEntity<ErrorResponse>{
         val error = ErrorResponse(HttpStatus.BAD_REQUEST.value(), ex.message, LocalDateTime.now())
         return ResponseEntity(error, HttpStatus.BAD_REQUEST)
     }
