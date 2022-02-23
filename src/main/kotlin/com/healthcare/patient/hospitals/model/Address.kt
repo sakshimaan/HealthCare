@@ -1,7 +1,7 @@
 package com.healthcare.patient.hospitals.model
 
-class Address(
-    var houseNo:Int,
+data class Address(
+    var houseNo:String,
     var block:String,
     var city:String,
     var state:String,

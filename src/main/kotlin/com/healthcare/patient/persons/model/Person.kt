@@ -7,10 +7,13 @@ import com.healthcare.patient.responseMessages.FailureMessages.Companion.INCORRE
 import com.healthcare.patient.responseMessages.FailureMessages.Companion.INVALID_PHONE_NO
 import com.healthcare.patient.responseMessages.FailureMessages.Companion.NAME_ERROR
 import com.healthcare.patient.hospitals.model.Address
+import com.healthcare.patient.responseMessages.FailureMessages.Companion.INCORRECT_GENDER
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.mapping.Document
+import org.springframework.validation.annotation.Validated
 import java.time.LocalDate
 import java.time.LocalDateTime
+import javax.validation.Valid
 import javax.validation.constraints.Email
 import javax.validation.constraints.NotEmpty
 import javax.validation.constraints.Past
@@ -28,10 +31,9 @@ data class Person(
     @field:Past(message = INCORRECT_DOB)
     @JsonFormat(pattern = "dd-MM-yyyy")
     var dob:LocalDate?,
-
     @field:Pattern(regexp = "^[6-9][0-9]{9}\$", message = INVALID_PHONE_NO)
     var phoneNo:String,
-
+    @field:Pattern(regexp = "^(male)?(MALE)?(female)?(FEMALE)?\$", message = INCORRECT_GENDER)
     var gender:String?,
     var address: Address,
     var role:Role,

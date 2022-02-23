@@ -18,6 +18,7 @@ class FailureMessages {
         const val EMAIL_ID_ERROR = "Please enter proper syntax of email id"
         const val INCORRECT_DOB = "Date of Birth can not be future or present date."
         const val INVALID_PHONE_NO = "Phone Number should have 10 digits  and starting 3 digits can be in between 6-9 only."
+        const val INCORRECT_GENDER ="Gender can be Male or Female, if you don't want to disclose then leave it empty"
 
 //      !!!-----Hospital Service Layer Messages-----!!!
         const val HOSPITAL_ID_ERROR = "No hospital exists with this id"
