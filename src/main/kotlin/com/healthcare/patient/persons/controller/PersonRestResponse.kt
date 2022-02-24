@@ -6,9 +6,9 @@ import org.springframework.http.HttpStatus
 import java.time.LocalDateTime
 
 class PersonRestResponse(
-    var message:String,
+    var message: String,
     var status: HttpStatus,
     @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
-    var time:LocalDateTime,
-    var data:Person
+    var time: LocalDateTime,
+    var data: Person
 )

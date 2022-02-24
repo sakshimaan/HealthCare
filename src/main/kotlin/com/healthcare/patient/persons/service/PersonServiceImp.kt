@@ -16,38 +16,38 @@ import org.apache.commons.lang3.RandomStringUtils
 import org.springframework.stereotype.Service
 
 @Service
-class PersonServiceImp(private val repository: PersonRepository):PersonService{
+class PersonServiceImp(private val repository: PersonRepository) : PersonService {
 
-    override fun createPerson(person:Person):Person {
+    override fun createPerson(person: Person): Person {
         person.id = generateUniqueId()
         try {
             if (person.role == Role.PATIENT && person.dob == null) throw CustomException(DOB_ERROR)
-        }catch (e:CustomException) {
+        } catch (e: CustomException) {
             throw CustomException(DOB_ERROR)
         }
         try {
-            if(person.address.city.isEmpty() ||person.address.state.isEmpty() || person.address.country.isEmpty())
+            if (person.address.city.isEmpty() || person.address.state.isEmpty() || person.address.country.isEmpty())
                 throw CustomException(ADDRESS_ERROR)
-        }catch (e:CustomException){
+        } catch (e: CustomException) {
             throw CustomException(ADDRESS_ERROR)
         }
         try {
             if (!Validate.pinCodeValid(person.address.pinCode)) throw CustomException(PIN_CODE_ERROR)
-        }catch (e:Exception){
+        } catch (e: Exception) {
             throw CustomException(PIN_CODE_ERROR)
         }
 
-        try{
+        try {
             return repository.save(person)
-        }catch (e:Exception){
+        } catch (e: Exception) {
             throw CustomException(PERSON_CREATE_ERROR)
         }
     }
 
     override fun getAll(): List<Person> {
-        try{
+        try {
             return repository.findAll()
-        }catch (e:Exception){
+        } catch (e: Exception) {
             throw CustomException(INTERNAL_SERVER_ERROR)
         }
     }
@@ -87,10 +87,10 @@ class PersonServiceImp(private val repository: PersonRepository):PersonService{
     override fun partialUpdate(id: String, person: Person): Person {
         val oldId = repository.findById(id).orElseThrow { Exception(PERSON_ID_ERROR) }
         person.firstName?.let { oldId.firstName = it }
-        person.lastName?.let { oldId.lastName = it}
+        person.lastName?.let { oldId.lastName = it }
         person.email?.let { oldId.email = it }
         person.dob?.let { oldId.dob = it }
-        person.phoneNo?.let { oldId.phoneNo = it}
+        person.phoneNo?.let { oldId.phoneNo = it }
         person.gender?.let { oldId.gender = it }
         person.address.houseNo?.let { oldId.address.houseNo = it }
         person.address.block?.let { oldId.address.block = it }
@@ -98,22 +98,22 @@ class PersonServiceImp(private val repository: PersonRepository):PersonService{
         person.address.state?.let { oldId.address.state = it }
         person.address.country?.let { oldId.address.country = it }
         person.address.pinCode?.let { oldId.address.pinCode = it }
-        person.role?.let { oldId.role = it}
+        person.role?.let { oldId.role = it }
         person.active?.let { oldId.active = it }
         return repository.save(person)
-        }
+    }
 
-    override fun deleteOne(id:String) = repository.deleteById(id)
+    override fun deleteOne(id: String) = repository.deleteById(id)
 
     fun generateUniqueId(): String {
-        var generatedId:String
+        var generatedId: String
         var attempt = 1
         do {
             generatedId = RandomStringUtils.randomNumeric(8)
-            if(++attempt > 10) {
+            if (++attempt > 10) {
                 throw CustomException(UNIQUE_ID_ERROR)
             }
-        }while(repository.existsById(generatedId))
-        return  generatedId
+        } while (repository.existsById(generatedId))
+        return generatedId
     }
 }

@@ -1,7 +1,7 @@
 package com.healthcare.patient.responseMessages
 
 class ApiResponseMessages {
-    companion object{
+    companion object {
         const val PERSON_ADDED = "Person details added successfully"
         const val PERSON_UPDATED = "Person details updated successfully"
         const val HOSPITAL_ADDED = "Hospital details added successfully"

@@ -11,20 +11,20 @@ import javax.validation.constraints.FutureOrPresent
 @Document("appointment")
 data class Appointment(
     @Id
-    var id:String?,
+    var id: String?,
     var patientId: String,
-    var practitionerId:String,
-    var hospitalId:String,
+    var practitionerId: String,
+    var hospitalId: String,
 
     @field:FutureOrPresent(message = APPOINTMENT_DATE)
     @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
-    var startDate:LocalDateTime,
+    var startDate: LocalDateTime,
 
     @field:FutureOrPresent(message = APPOINTMENT_DATE)
     @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
     var endDate: LocalDateTime,
 
-    var status:Status,
+    var status: Status,
     @JsonIgnore
     var updatedAt: LocalDateTime = LocalDateTime.now(),
     @JsonIgnore

@@ -7,6 +7,6 @@ import org.springframework.boot.runApplication
 class PatientApplication
 
 fun main(args: Array<String>) {
-	runApplication<PatientApplication>(*args)
-	println("\nHealth Care Spring Boot Project !!!!!")
+    runApplication<PatientApplication>(*args)
+    println("\nHealth Care Spring Boot Project !!!!!")
 }

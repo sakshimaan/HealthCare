@@ -4,8 +4,7 @@ import com.healthcare.patient.appointments.model.Appointment
 import org.springframework.data.mongodb.repository.MongoRepository
 import java.time.LocalDateTime
 
-interface AppointmentRepository:MongoRepository<Appointment,String>{
+interface AppointmentRepository : MongoRepository<Appointment, String> {
 
-     fun existsByStartDate(startDate: LocalDateTime):Boolean
-
+    fun existsByStartDate(startDate: LocalDateTime): Boolean
 }

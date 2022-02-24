@@ -16,36 +16,36 @@ import org.apache.commons.lang3.RandomStringUtils
 import org.springframework.stereotype.Service
 
 @Service
-class AppointmentServiceImp(private val repository:AppointmentRepository,private val personRepository: PersonRepository) : AppointmentService{
+class AppointmentServiceImp(private val repository: AppointmentRepository, private val personRepository: PersonRepository) : AppointmentService {
 
-    override fun getAll(personId:String): List<Appointment>{
+    override fun getAll(personId: String): List<Appointment> {
         try {
-            val person:Person = personRepository.findById(personId).orElseThrow{ CustomException(PERSON_ID_ERROR)}
-            if(person.role != Role.PATIENT && person.role != Role.PHYSICIAN) {
+            val person: Person = personRepository.findById(personId).orElseThrow { CustomException(PERSON_ID_ERROR) }
+            if (person.role != Role.PATIENT && person.role != Role.PHYSICIAN) {
                 throw CustomException(APPOINTMENT_ERROR)
             }
             return repository.findAll()
-        }catch (e: Exception) {
+        } catch (e: Exception) {
             throw CustomException(APPOINTMENT_ERROR)
         }
     }
 
     override fun create(appointment: Appointment): Appointment {
         appointment.id = generateUniqueId()
-        try{
-            if(repository.existsByStartDate(appointment.startDate)){
+        try {
+            if (repository.existsByStartDate(appointment.startDate)) {
                 throw CustomException(SLOT_ERROR)
             }
-        } catch(e:Exception){
-        throw CustomException(SLOT_ERROR)
-    }
-        try{
-            val person:Person = personRepository.findById(appointment.practitionerId).orElseThrow { Exception("Practitioner not found")}
-            if(!person.active){
+        } catch (e: Exception) {
+            throw CustomException(SLOT_ERROR)
+        }
+        try {
+            val person: Person = personRepository.findById(appointment.practitionerId).orElseThrow { Exception("Practitioner not found") }
+            if (!person.active) {
                 throw CustomException(PRACTITIONER_ERROR)
             }
             return repository.save(appointment)
-        }catch (e:Exception){
+        } catch (e: Exception) {
             throw CustomException(PRACTITIONER_ERROR)
         }
     }
@@ -59,14 +59,14 @@ class AppointmentServiceImp(private val repository:AppointmentRepository,private
         oldId.endDate = appointment.endDate
         oldId.createdAt = appointment.createdAt
         oldId.status = oldId.status
-        return  repository.save(appointment)
+        return repository.save(appointment)
     }
 
     override fun partialUpdate(appointment: Appointment, id: String): Appointment {
         val oldId = repository.findById(id).orElseThrow { Exception(APPOINTMENT_ID_ERROR) }
         appointment.patientId?.let { oldId.patientId = it }
         appointment.practitionerId?.let { oldId.practitionerId = it }
-        appointment.hospitalId?.let { {oldId.hospitalId = it} }
+        appointment.hospitalId?.let { { oldId.hospitalId = it } }
         appointment.startDate?.let { oldId.startDate = it }
         appointment.endDate?.let { oldId.endDate = it }
         appointment.createdAt?.let { oldId.createdAt = it }
@@ -79,14 +79,14 @@ class AppointmentServiceImp(private val repository:AppointmentRepository,private
     }
 
     fun generateUniqueId(): String {
-        var generatedId:String
+        var generatedId: String
         var attempt = 1
         do {
             generatedId = RandomStringUtils.randomNumeric(8)
-            if(++attempt > 10) {
+            if (++attempt > 10) {
                 throw CustomException(UNIQUE_ID_ERROR)
             }
-        }while(repository.existsById(generatedId))
-        return  generatedId
+        } while (repository.existsById(generatedId))
+        return generatedId
     }
 }

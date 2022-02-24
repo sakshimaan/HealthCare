@@ -5,7 +5,7 @@ import org.springframework.data.mongodb.repository.MongoRepository
 import org.springframework.data.mongodb.repository.Query
 import org.springframework.data.repository.query.Param
 
-interface HospitalRepository:MongoRepository<Hospital,String> {
+interface HospitalRepository : MongoRepository<Hospital, String> {
     fun findByName(@Param("name") name: String): List<Hospital>
 
     @Query("{'Address.city':?0}")
