@@ -38,7 +38,8 @@ Practitioner and Hospital details.
 
 **For Person:-**
 
-I’ve usedPostmanfor checking endpoint responses.
+I’ve used Postman https://www.postman.com/ for checking endpoint responses.
+
 Get endpoint for getting person details consists of options :- 
 - get all details
 - get details by first name
