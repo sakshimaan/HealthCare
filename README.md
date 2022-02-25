@@ -90,7 +90,7 @@ DELETE :- [http://localhost:8080/appointment/](http://localhost:8080/appointment
 
 # Features :-
 
-- Every person has roles like - PHYSICIAN,THERAPIST, DENTIST, PHARMACIST,
+- Every person has roles like - PHYSICIAN, THERAPIST, DENTIST, PHARMACIST,
     NURSE, DIETITIAN, PATIENT.
 - Persons have their Status ( “is active” or “not active”).
 - A physician can be associated with many hospitals.
