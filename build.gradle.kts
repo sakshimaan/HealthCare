@@ -27,6 +27,7 @@ dependencies {
     testImplementation("io.mockk:mockk:1.12.2")
     testImplementation("com.ninja-squad:springmockk:3.1.0")
     implementation("org.springframework.boot:spring-boot-starter-security:2.6.3")
+    implementation("com.beust:klaxon:5.5")
 }
 
 tasks.withType<KotlinCompile> {
