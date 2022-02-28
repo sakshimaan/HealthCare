@@ -23,11 +23,12 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 @AutoConfigureMockMvc(addFilters = false)
-@WebMvcTest(AppointmentController :: class)
+@WebMvcTest(AppointmentController::class)
 internal class AppointmentControllerTest {
 
     @MockkBean
     lateinit var mockAppointmentService: AppointmentService
+
     @Autowired
     private lateinit var mockMvc: MockMvc
     private val personId = "36283007"
@@ -50,6 +51,7 @@ internal class AppointmentControllerTest {
         }
         assertEquals(mockAppointmentService.getAll("36283007"), listOf(expectedData))
     }
+
     private fun performMeForGetRequest() =
         mockMvc.perform(
             get("http://localhost:8080/appointment/personId?personId=36283007")
@@ -60,7 +62,7 @@ internal class AppointmentControllerTest {
     private val formatter: DateTimeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")
     private val dateTime: LocalDateTime = LocalDateTime.parse("12-07-2024 05:30:44", formatter)
 
-   // @Test
+    // @Test
     fun postRequest_ReturnStatus200() {
         val data = Appointment(
             "39921555", "36283007", "32840339", "7650114", dateTime, dateTime, Status.BOOKED
@@ -74,6 +76,7 @@ internal class AppointmentControllerTest {
         }
         assertEquals(mockAppointmentService.create(data), data)
     }
+
     private fun performMeForPostRequest() =
         mockMvc.perform(
             post("http://localhost:8080/appointment")
