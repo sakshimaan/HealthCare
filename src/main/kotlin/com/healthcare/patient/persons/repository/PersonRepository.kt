@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param
 
 interface PersonRepository : MongoRepository<Person, String> {
 
+
     fun findByFirstName(@Param("firstName") firstName: String): List<Person>
 
     fun findByRole(@Param("role") role: String?): List<Person>?

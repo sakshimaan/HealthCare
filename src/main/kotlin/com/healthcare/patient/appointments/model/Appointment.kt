@@ -8,7 +8,7 @@ import org.springframework.data.mongodb.core.mapping.Document
 import java.time.LocalDateTime
 import javax.validation.constraints.FutureOrPresent
 
-@Document("appointment")
+@Document("appointments")
 data class Appointment(
     @Id
     var id: String?,
